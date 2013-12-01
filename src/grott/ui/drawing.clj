@@ -82,12 +82,18 @@
 (defn draw-hud [screen game]
   (let [hud-row (dec (second (s/get-size screen)))
         player (get-in game [:world :entities :player])
-        {:keys [location hp max-hp common-exp]} player
+        {:keys [location hp max-hp]} player
         [x y] location
         info (str "hp [" hp "/" max-hp "]")
-        info (str info " loc: [" x "-" y "]")
-        info (str info " exp: " common-exp)]
+        info (str info " loc: [" x "-" y "]")]
     (s/put-string screen 0 hud-row info)))
+
+(defn draw-player-info [screen game]
+  (let [screen-size (s/get-size screen)
+        area {:x (first screen-size) :y (/ (second screen-size) 2)}
+        player (get-in game [:world :entities :player])
+        info (str (:base-stats player))]
+    (s/put-string screen 0 0 info)))
 
 
 (defn draw-entity [screen origin vrows vcols {:keys [location glyph color]}]
@@ -147,6 +153,9 @@
     (draw-hud screen game)
     (draw-messages screen (:messages player))
     (highlight-player screen origin player)))
+
+(defmethod draw-ui :stats [ui game screen]
+  (draw-player-info screen game))
 
 
 ; Entire Game -----------------------------------------------------------------

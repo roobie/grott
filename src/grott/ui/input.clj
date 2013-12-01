@@ -26,6 +26,8 @@
     :backspace (assoc game :uis [(->UI :lose)])
     \q         (assoc game :uis [])
 
+    \I (assoc game :uis [(->UI :stats)])
+
     \h (update-in game [:world] move-player :w)
     \j (update-in game [:world] move-player :s)
     \k (update-in game [:world] move-player :n)
@@ -48,7 +50,6 @@
   (if (= input :escape)
     (assoc game :uis [])
     (assoc game :uis [(->UI :start)])))
-
 
 (defn get-input [game screen]
   (assoc game :input (s/get-key-blocking screen)))
