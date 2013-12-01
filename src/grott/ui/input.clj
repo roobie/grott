@@ -51,5 +51,11 @@
     (assoc game :uis [])
     (assoc game :uis [(->UI :start)])))
 
+(defmethod process-input :stats [game input]
+  (case input
+    \q (assoc game :uis [(->UI :play)])
+
+    game))
+
 (defn get-input [game screen]
   (assoc game :input (s/get-key-blocking screen)))
