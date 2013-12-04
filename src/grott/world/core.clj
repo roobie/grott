@@ -3,7 +3,7 @@
 
 
 ; Constants -------------------------------------------------------------------
-(def world-size [120 50])
+(def world-size [100 40])
 
 ; Data structures -------------------------------------------------------------
 (defrecord World [tiles entities])

@@ -2,9 +2,19 @@
 
 (def ids (atom 0))
 
+(def being-types {:humanoid "humanoid"
+                  :lagomorph "lagomorph"
+                  :lichen "lichen"
+                  :insect "insect"})
+
+(def vitality {:living "this being is alive and healthy"
+               :ill "this being "})
+
 (defprotocol Entity
   (tick [this world]
-    "Update the world to handle the passing of a tick for this entity."))
+    "Update the world to handle the passing of a tick for this entity.")
+  (get-type-of-being [this]
+    "Get the type of being that this Entity is. E.g. 'humanoid' or 'lagomorph'"))
 
 (defn get-id []
   (swap! ids inc))
@@ -119,20 +129,29 @@
                    trauma#])
 
 (defrecord Skill [name
+                  description
                   experience
                   synergies])
 
 (defn make-skill
   ([name]
-     (make-skill name 0 '()))
+     (make-skill name "" 0 '()))
   ([name synergies]
-     (make-skill name 0 synergies))
-  ([name experience synergies]
+     (make-skill name "" 0 synergies))
+  ([name description synergies]
+     (make-skill name description 0 synergies))
+  ([name description experience synergies]
      (map->Skill {:name name
+                  :description description
                   :experience experience
                   :synergies synergies})))
 
 (def skill-map {:spot (make-skill "spot"
                                   '(:psyche :sight))
+                :mettle (make-skill "mettle"
+                                    "This skill determines how well an entity reacts and adapts to combat."
+                                    '(:will :psyche :endurance))
                 :unarmed-combat (make-skill "unarmed combat"
                                             '(:strength :endurance :will))})
+
+

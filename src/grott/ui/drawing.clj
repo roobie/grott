@@ -1,5 +1,6 @@
 (ns grott.ui.drawing
-  (:use [grott.utils :only (map2d shear enumerate)])
+  (:use [grott.utils :only (map2d shear enumerate)]
+        [seesaw.core])
   (:require [lanterna.screen :as s]))
 
 
@@ -88,30 +89,48 @@
         info (str info " loc: [" x "-" y "]")]
     (s/put-string screen 0 hud-row info)))
 
+(defn display! [frm content]
+  (config! frm :content content)
+  content)
+
 (defn draw-player-info [screen game]
-  (let [screen-size (s/get-size screen)
-        area {:x (first screen-size) :y (/ (second screen-size) 2)}
-        player (get-in game [:world :entities :player])
-        ;info (str (:base-stats player))
+  (native!)
+  (let [player (get-in game [:world :entities :player])
         bstats (:base-stats player)
         status (:status player)
-        skills (:skills player)]
-    ;(s/put-string screen 0 0 info)
-    (s/put-string screen 0 0 (str "Strength:  " (:strength bstats)))
-    (s/put-string screen 0 1 (str "Endurance: " (:endurance bstats)))
-    (s/put-string screen 0 2 (str "Dexterity: " (:dexterity bstats)))
-    (s/put-string screen 0 3 (str "Agility:   " (:agility bstats)))
-    (s/put-string screen 0 4 (str "Psyche:    " (:psyche bstats)))
-    (s/put-string screen 0 5 (str "Will:      " (:will bstats)))
-    (s/put-string screen 0 6 (str "Sight:     " (:sight bstats)))
-    (s/put-string screen 0 7 (str "Hearing:   " (:hearing bstats)))
-    (s/put-string screen 0 8 (str "Smell:     " (:smell bstats)))
-    (s/put-string screen 0 9 (str "Taste:     " (:taste bstats)))
+        skills (:skills player)
+        f (frame :title "Test")
+        area (text :multi-line? true :font "MONOSPACED-PLAIN-14" :text "This")
+        split (left-right-split (scrollable area) (scrollable area) :divider-location 1/3)
+        lblstr (label (str "Strength: " (:strength bstats)))
+        lblend (label (str "Endurance: " (:endurance bstats)))]
+    (display! f (border-panel
+                 :north (horizontal-panel :items [lblstr lblend])
+                 :center area
+                 :vgap 5 :hgap 5 :border 5))
+    (-> f pack! show!))
+  (comment (let [screen-size (s/get-size screen)
+         area {:x (first screen-size) :y (/ (second screen-size) 2)}
+         player (get-in game [:world :entities :player])
+                                        ;info (str (:base-stats player))
+         bstats (:base-stats player)
+         status (:status player)
+         skills (:skills player)]
+                                        ;(s/put-string screen 0 0 info)
+     (s/put-string screen 0 0 (str "Strength:  " (:strength bstats)))
+     (s/put-string screen 0 1 (str "Endurance: " (:endurance bstats)))
+     (s/put-string screen 0 2 (str "Dexterity: " (:dexterity bstats)))
+     (s/put-string screen 0 3 (str "Agility:   " (:agility bstats)))
+     (s/put-string screen 0 4 (str "Psyche:    " (:psyche bstats)))
+     (s/put-string screen 0 5 (str "Will:      " (:will bstats)))
+     (s/put-string screen 0 6 (str "Sight:     " (:sight bstats)))
+     (s/put-string screen 0 7 (str "Hearing:   " (:hearing bstats)))
+     (s/put-string screen 0 8 (str "Smell:     " (:smell bstats)))
+     (s/put-string screen 0 9 (str "Taste:     " (:taste bstats)))
 
-    (dotimes [n 10]
-      (s/put-string screen 14 n (str "|")))
-
-    ))
+     (dotimes [n 10]
+       (s/put-string screen 14 n (str "|")))))
+  )
 
 
 (defn draw-entity [screen origin vrows vcols {:keys [location glyph color]}]

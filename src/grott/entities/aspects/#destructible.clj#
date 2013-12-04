@@ -1,5 +1,6 @@
 (ns grott.entities.aspects.destructible
-  (:use [grott.entities.core :only [defaspect]]
+  (:use [grott.entities.core :only [defaspect
+                                    being-types]]
         [grott.entities.aspects.receiver :only [send-message-nearby]]))
 
 
@@ -13,6 +14,5 @@
                                          world)]
           world)
         (assoc-in world [:entities id] damaged-this))))
-
   (defense-value [this world]
     (get this :defense 0)))

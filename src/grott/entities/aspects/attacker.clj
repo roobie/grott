@@ -2,7 +2,7 @@
   (:use [grott.entities.aspects.receiver :only [send-message]]
         [grott.entities.aspects.destructible :only [Destructible take-damage
                                                     defense-value]]
-        [grott.entities.aspects.learner :only [gain-experience]]
+        [grott.entities.aspects.learner]
         [grott.entities.core :only [defaspect]]))
 
 
@@ -14,7 +14,6 @@
     (let [damage (get-damage this target world)]
       (->> world
         (take-damage target damage)
-        (gain-experience this 5)
         (send-message this "You strike the %s for %d damage!"
                       [(:name target) damage])
         (send-message target "The %s strikes you for %d damage!"

@@ -7,6 +7,7 @@
                                     map->Status
                                     ->Skill
                                     skill-map
+                                    being-types
                                     add-aspect]]
         [grott.entities.aspects.receiver :only [Receiver]]
         [grott.entities.aspects.mobile :only [Mobile move can-move?]]
@@ -23,6 +24,7 @@
                    glyph
                    color
                    location
+                   being-type
                    hp
                    max-hp
                    base-stats
@@ -33,7 +35,9 @@
 
 (extend-type Player Entity
   (tick [this world]
-    world))
+    world)
+  (get-type-of-being [this]
+    (:being-type this)))
 
 (add-aspect Player Mobile)
 (add-aspect Player Digger)
@@ -47,6 +51,7 @@
                 :name "player"
                 :glyph "@"
                 :color :white
+                :being-type (:humanoid being-types)
                 :location location
                 :hp 40
                 :max-hp 40

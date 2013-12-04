@@ -43,13 +43,13 @@
   ([] (main :swing false))
   ([screen-type] (main screen-type false))
   ([screen-type block?]
-   (letfn [(go []
-             (let [screen (s/get-screen screen-type)]
-               (s/in-screen screen
-                            (run-game (new-game) screen))))]
-     (if block?
-       (go)
-       (future (go))))))
+     (letfn [(go []
+               (let [screen (s/get-screen screen-type)]
+                 (s/in-screen screen
+                              (run-game (new-game) screen))))]
+       (if block?
+         (go)
+         (future (go))))))
 
 
 (defn -main [& args]
